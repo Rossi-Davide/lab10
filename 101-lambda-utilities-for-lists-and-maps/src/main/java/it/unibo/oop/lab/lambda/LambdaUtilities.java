@@ -13,6 +13,8 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import org.apache.commons.collections4.SetUtils;
+
 /**
  * This class will contain four utility functions on lists and maps, of which the first one is provided as example.
  * 
@@ -61,7 +63,9 @@ public final class LambdaUtilities {
         /*
          * Suggestion: consider Optional.filter
          */
-        return null;
+        final List<Optional<T>> l = new ArrayList<>();
+        list.forEach(t -> l.add(Optional.of(t).filter(pre)));
+        return l;
     }
 
     /**
@@ -80,7 +84,9 @@ public final class LambdaUtilities {
         /*
          * Suggestion: consider Map.merge
          */
-        return null;
+        final Map<R, Set<T>> map = new HashMap<>();
+        list.forEach(t -> map.merge(op.apply(t), Set.of(t), SetUtils::union));
+        return map;
     }
 
     /**
@@ -101,7 +107,10 @@ public final class LambdaUtilities {
          *
          * Keep in mind that a map can be iterated through its forEach method
          */
-        return null;
+        final Map<K, V> map2 = new HashMap<>();
+        //orElse chiamerebbe def tutte le volte perchè all'interno del parametro gli passo un V ottenuto da def.get(): problema in termini di prestazioni
+        map.forEach((k, v) -> map2.put(k, v.orElseGet(def)));
+        return map2;
     }
 
     /**
