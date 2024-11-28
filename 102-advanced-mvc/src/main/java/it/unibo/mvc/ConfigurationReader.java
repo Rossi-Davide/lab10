@@ -1,14 +1,9 @@
 package it.unibo.mvc;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Map;
 import java.util.Objects;
 import java.util.StringTokenizer;
 
@@ -17,6 +12,10 @@ public class ConfigurationReader {
     private static final String DEFAULT_PATH = "resources/config.yml";
     private String path = DEFAULT_PATH;
 
+    /**
+     * Updates the path of the configuration file to read from.
+     * @param path the path of the configuration file
+     */
     public void setPath(final String path) {
         this.path = Objects.requireNonNull(path, "Empty configuration file name");
     }
@@ -35,10 +34,15 @@ public class ConfigurationReader {
             case "attempts":
                 builder.setAttempts(Integer.parseInt(value));
                 break;
-        }        
-
+        }
     }
 
+    /**
+     * Reads the configuration file.
+     * @return A configuration object filled with the parameters read from file
+     * @throws IOException
+     * if the resource cannot be read because of permission issues or if it doesn't exist
+     */
     public Configuration readConfigurationFile() throws IOException{
         final Configuration.Builder builder = new Configuration.Builder();
         try (
@@ -46,9 +50,9 @@ public class ConfigurationReader {
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
             BufferedReader bReader = new BufferedReader(inputStreamReader);
         ) {
-            setBuilderProperty(bReader.readLine(), builder);
-            setBuilderProperty(bReader.readLine(), builder);
-            setBuilderProperty(bReader.readLine(), builder);
+            for(String line = bReader.readLine();line != null; line = bReader.readLine()) {
+                setBuilderProperty(bReader.readLine(), builder);
+            }        
         }
         return builder.build();
     }

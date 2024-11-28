@@ -33,7 +33,6 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
                 view.displayError(ex.getMessage());
             }
         }
-
         this.model = new DrawNumberImpl(config.getMin(), config.getMax(), config.getAttempts());
     }
 
