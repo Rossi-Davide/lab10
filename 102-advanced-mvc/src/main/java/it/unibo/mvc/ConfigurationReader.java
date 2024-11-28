@@ -14,41 +14,42 @@ import java.util.StringTokenizer;
 
 public class ConfigurationReader {
 
-    private static final String DEFAULT_PATH = "src/main/resources/config.yml";
+    private static final String DEFAULT_PATH = "resources/config.yml";
+    private String path = DEFAULT_PATH;
 
-    private File readFile = new File(DEFAULT_PATH);
-
-    public void setFile(final File file) {
-        if(!file.exists()) {
-            throw new IllegalArgumentException("Cannot read from a non existing file");
-        }
-        
+    public void setPath(final String path) {
+        this.path = Objects.requireNonNull(path, "Empty configuration file name");
     }
 
     private void setBuilderProperty(final String line, final Configuration.Builder builder) {
-
         StringTokenizer tokenizer = new StringTokenizer(line, ":");
-
         final String property = tokenizer.nextToken();
         final String value = tokenizer.nextToken();
-
-        
+        switch (property) {
+            case "minimum":
+                builder.setMin(Integer.parseInt(value));
+                break;
+            case "maximum":
+                builder.setMax(Integer.parseInt(value));
+                break;
+            case "attempts":
+                builder.setAttempts(Integer.parseInt(value));
+                break;
+        }        
 
     }
 
-    public Configuration getConfiguration() throws IOException{
+    public Configuration readConfigurationFile() throws IOException{
+        final Configuration.Builder builder = new Configuration.Builder();
         try (
-            FileInputStream fileInputStream = new FileInputStream(readFile);
-            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+            InputStream inputStream = ClassLoader.getSystemResourceAsStream(path);
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
             BufferedReader bReader = new BufferedReader(inputStreamReader);
         ) {
-            final Configuration.Builder builder = new Configuration.Builder();
-
             setBuilderProperty(bReader.readLine(), builder);
             setBuilderProperty(bReader.readLine(), builder);
             setBuilderProperty(bReader.readLine(), builder);
-
-            return builder.build();
         }
+        return builder.build();
     }
 }
