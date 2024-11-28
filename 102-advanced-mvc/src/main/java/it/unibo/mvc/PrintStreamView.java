@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.util.Objects;
 
 /**
  * This class implements a view that can write on any PrintStream.
@@ -59,9 +60,8 @@ public final class PrintStreamView implements DrawNumberView {
     }
 
     @Override
-    public void displayError(String message) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'displayError'");
+    public void displayError(final String message) {
+        out.println(message);
     }
 
 }
