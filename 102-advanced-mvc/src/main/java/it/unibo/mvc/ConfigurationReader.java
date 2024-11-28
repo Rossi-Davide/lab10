@@ -9,7 +9,7 @@ import java.util.StringTokenizer;
 
 public class ConfigurationReader {
 
-    private static final String DEFAULT_PATH = "resources/config.yml";
+    private static final String DEFAULT_PATH = "config.yml";
     private String path = DEFAULT_PATH;
 
     /**
@@ -51,7 +51,7 @@ public class ConfigurationReader {
             BufferedReader bReader = new BufferedReader(inputStreamReader);
         ) {
             for(String line = bReader.readLine();line != null; line = bReader.readLine()) {
-                setBuilderProperty(bReader.readLine(), builder);
+                setBuilderProperty(line, builder);
             }        
         }
         return builder.build();
