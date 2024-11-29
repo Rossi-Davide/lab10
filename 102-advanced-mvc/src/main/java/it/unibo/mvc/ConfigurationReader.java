@@ -22,8 +22,8 @@ public class ConfigurationReader {
 
     private void setBuilderProperty(final String line, final Configuration.Builder builder) {
         StringTokenizer tokenizer = new StringTokenizer(line, ":");
-        final String property = tokenizer.nextToken();
-        final String value = tokenizer.nextToken();
+        final String property = tokenizer.nextToken().trim();
+        final String value = tokenizer.nextToken().trim();
         switch (property) {
             case "minimum":
                 builder.setMin(Integer.parseInt(value));
@@ -43,7 +43,7 @@ public class ConfigurationReader {
      * @throws IOException
      * if the resource cannot be read because of permission issues or if it doesn't exist
      */
-    public Configuration readConfigurationFile() throws IOException{
+    public Configuration readConfigurationFile() throws IOException, NumberFormatException{
         final Configuration.Builder builder = new Configuration.Builder();
         try (
             InputStream inputStream = ClassLoader.getSystemResourceAsStream(path);

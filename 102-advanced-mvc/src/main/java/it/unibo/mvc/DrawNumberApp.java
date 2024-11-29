@@ -28,7 +28,7 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
         Configuration config = new Configuration.Builder().build();
         try {
             config = new ConfigurationReader().readConfigurationFile();
-        } catch (IOException ex) {
+        } catch (IOException | NumberFormatException ex) {
             for (final DrawNumberView view: views) {
                 view.displayError(ex.getMessage());
             }
@@ -72,7 +72,12 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
      * @throws FileNotFoundException 
      */
     public static void main(final String... args) throws FileNotFoundException {
-        new DrawNumberApp(new DrawNumberViewImpl());
+        new DrawNumberApp(
+            new DrawNumberViewImpl(),
+            new DrawNumberViewImpl(),
+            new PrintStreamView(System.out),
+            new PrintStreamView("program.log")
+            );
     }
 
 }
